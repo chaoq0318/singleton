@@ -46,8 +46,9 @@ public class CommonUtility {
             CategoriesEnum categoriesEnum = CategoriesEnum.getCategoriesEnumByText(cat);
             if (categoriesEnum == null) {
                 catList.add(null);
+            } else {
+                catList.add(categoriesEnum.getText());
             }
-            catList.add(categoriesEnum.getText());
         }
         return catList;
     }
