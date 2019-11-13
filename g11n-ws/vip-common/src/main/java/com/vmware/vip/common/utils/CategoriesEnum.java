@@ -8,12 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 
 
 public enum CategoriesEnum {
-    DATES(0, "dates"),
-    NUMBERS(1, "numbers"),
-    PLURALS(2, "plurals"),
-    MEASUREMENTS(3, "measurements"),
-    CURRENCIES(4, "currencies"),
-    DATE_FIELDS(5, "dateFields");
+    DATES(1, "dates"),
+    NUMBERS(2, "numbers"),
+    PLURALS(4, "plurals"),
+    MEASUREMENTS(8, "measurements"),
+    CURRENCIES(16, "currencies"),
+    DATE_FIELDS(32, "dateFields");
 
     private Integer type;
 
