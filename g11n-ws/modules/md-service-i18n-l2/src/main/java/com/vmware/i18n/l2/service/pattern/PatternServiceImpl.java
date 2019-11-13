@@ -152,17 +152,11 @@ public class PatternServiceImpl implements IPatternService {
 		}
 
 		if (categoryList.contains(ConstantsKeys.PLURALS)) {
-			Map<String, Object> pluralPatternMap = getPattern(language, Arrays.asList(ConstantsKeys.PLURALS));
-			Map<String, Object> pluralRulesMap = new LinkedHashMap<>();
-			pluralRulesMap.put(ConstantsKeys.PLURAL_RULES, null);
-			categoriesMap.put(ConstantsKeys.PLURALS, pluralRulesMap);
-			patternMap.put(ConstantsKeys.IS_EXIST_PATTERN, true);
-			if (null != pluralPatternMap.get(ConstantsKeys.CATEGORIES)) {
-				Map<String, Object> pluralMap = (Map<String, Object>) pluralPatternMap.get(ConstantsKeys.CATEGORIES);
-				if (null != pluralMap.get(ConstantsKeys.PLURALS)) {
-					categoriesMap.put(ConstantsKeys.PLURALS, pluralMap.get(ConstantsKeys.PLURALS));
-				}
-			}
+			handleSpecialCategory(ConstantsKeys.PLURALS, language, categoriesMap);
+		}
+
+		if (categoryList.contains(ConstantsKeys.DATE_FIELDS)) {
+			handleSpecialCategory(ConstantsKeys.DATE_FIELDS, language, categoriesMap);
 		}
 
 		if (!localeDataDTO.isDisplayLocaleID()) {
@@ -173,6 +167,19 @@ public class PatternServiceImpl implements IPatternService {
 		patternMap.put(ConstantsKeys.REGION, region);
 		patternMap.put(ConstantsKeys.CATEGORIES, categoriesMap);
 		return patternMap;
+	}
+
+	private void handleSpecialCategory(String category, String language, Map<String, Object> categoriesMap) throws VIPCacheException {
+		Map<String, Object> pluralPatternMap = getPattern(language, Arrays.asList(category));
+		Map<String, Object> pluralRulesMap = new LinkedHashMap<>();
+		pluralRulesMap.put(category, null);
+		categoriesMap.put(category, pluralRulesMap);
+		if (null != pluralPatternMap.get(ConstantsKeys.CATEGORIES)) {
+			Map<String, Object> pluralMap = (Map<String, Object>) pluralPatternMap.get(ConstantsKeys.CATEGORIES);
+			if (null != pluralMap.get(category)) {
+				categoriesMap.put(category, pluralMap.get(category));
+			}
+		}
 	}
 
 	/**

@@ -5,9 +5,10 @@
 package com.vmware.vip.i18n.api.base.utils;
 
 import com.vmware.i18n.utils.CommonUtil;
-import com.vmware.vip.common.constants.ConstantsKeys;
+import com.vmware.vip.common.utils.CategoriesEnum;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommonUtility {
@@ -17,10 +18,9 @@ public class CommonUtility {
      * @param categories
      * @return
      */
-    public static boolean checkParams(String[] categories, String... args){
-        List<String> catList = Arrays.asList(ConstantsKeys.ALL_CATEGORY);
+    public static boolean checkParams(List<String> categories, String... args){
         for (String cat : categories) {
-            if (!catList.contains(cat)) {
+            if (StringUtils.isEmpty(cat)) {
                 return false;
             }
         }
@@ -33,4 +33,23 @@ public class CommonUtility {
 
         return true;
     }
+
+    /**
+     * Get categories according to CategoriesEnum
+     * @param scope
+     * @return
+     */
+    public static List<String> getCategories(String scope){
+        String[] categories = scope.split(",");
+        List<String> catList = new ArrayList<>();
+        for (String cat : categories) {
+            CategoriesEnum categoriesEnum = CategoriesEnum.getCategoriesEnumByText(cat);
+            if (categoriesEnum == null) {
+                catList.add(null);
+            }
+            catList.add(categoriesEnum.getText());
+        }
+        return catList;
+    }
+
 }
