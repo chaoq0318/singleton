@@ -97,5 +97,5 @@ Online Resources
 
 License
 --------
-Singleton is released under [EPL v2.0 license](https://github.com/vmware/singleton/blob/master/LICENSE.txt).
+Singleton is released under [EPL v2.0 license](https://github.com/vmware/singleton/blob/master/LICENSE.txt)...
 
