@@ -6,10 +6,12 @@ package com.vmware.vip.i18n.api.v2;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -45,8 +47,12 @@ public class LocaleAPITest {
 		String json = RequestUtil.sendRequest(webApplicationContext, ConstantsForTest.GET, REGION_LIST_API_URI);
 		List<TerritoryDTO> list = (List<TerritoryDTO>) JSONUtils.getMapFromJson(json).get("data");
 		for (int i = 0; i < list.size(); i++) {
-			Assert.assertNotNull(list.get(i).getLanguage());
-			Assert.assertNotNull(list.get(i).getTerritories());
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jsonInfo = objectMapper.writeValueAsString(list.get(i));
+			TerritoryDTO territoryDTO =objectMapper.readValue(jsonInfo, TerritoryDTO.class);
+			BeanUtils.copyProperties(list.get(i), territoryDTO);
+			Assert.assertNotNull(territoryDTO.getLanguage());
+			Assert.assertNotNull(territoryDTO.getTerritories());
 		}
 	}
 
