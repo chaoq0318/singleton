@@ -4,11 +4,7 @@
  */
 package com.vmware.i18n.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
@@ -62,8 +58,6 @@ public class CLDRUtils {
      */
     public static void download() {
         int byteread = 0;
-        InputStream is = null;
-        FileOutputStream fs = null;
         String fileName = null;
         try {
             logger.info("Start to download the CLDR data ... ");
@@ -75,29 +69,28 @@ public class CLDRUtils {
                 URLConnection conn = urlObj.openConnection();
                 conn.setConnectTimeout(30 * 1000);
                 fileName = conn.getHeaderField("Content-Disposition").split("=")[1];
-                is = conn.getInputStream();
                 System.out.println(fileName);
-                File savePath = new File(CLDR_DOWNLOAD_DIR + fileName);
-                if (!savePath.getParentFile().exists()) {
-                    savePath.getParentFile().mkdirs();
+                try (InputStream is = conn.getInputStream(); FileOutputStream fs = new FileOutputStream(CLDR_DOWNLOAD_DIR + fileName);) {
+                    File savePath = new File(CLDR_DOWNLOAD_DIR + fileName);
+                    if (!savePath.getParentFile().exists()) {
+                        savePath.getParentFile().mkdirs();
+                    }
+                    if (!savePath.exists()) {
+                        savePath.createNewFile();
+                    }
+                    byte[] buffer = new byte[2048];
+                    while ((byteread = is.read(buffer)) != -1) {
+                        fs.write(buffer, 0, byteread);
+                    }
+                    fs.flush();
+                } catch (IOException e) {
+                    logger.error("CLDR Download error:" + e.getMessage());
+                    e.printStackTrace();
                 }
-                if (!savePath.exists()) {
-                    savePath.createNewFile();
-                }
-                fs = new FileOutputStream(CLDR_DOWNLOAD_DIR + fileName);
-                byte[] buffer = new byte[2048];
-                while ((byteread = is.read(buffer)) != -1) {
-                    fs.write(buffer, 0, byteread);
-                }
-                fs.flush();
             }
         } catch (Exception e) {
             logger.error("CLDR Download error:" + e.getMessage());
             e.printStackTrace();
-        } finally {
-            IOUtil.closeInputStream(is);
-            IOUtil.closeOutputStream(fs);
-            logger.info("CLDR Download complete!");
         }
     }
 

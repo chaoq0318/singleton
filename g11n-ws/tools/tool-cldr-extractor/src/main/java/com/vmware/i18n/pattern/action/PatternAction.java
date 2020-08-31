@@ -10,7 +10,7 @@ import com.vmware.i18n.utils.timezone.TimeZoneName;
 
 public class PatternAction {
 
-    private static volatile PatternAction instance = null;
+    private static PatternAction instance = null;
     private IPatternService service = null;
 
     private PatternAction() {

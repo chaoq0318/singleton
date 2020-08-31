@@ -67,16 +67,20 @@ public class RequestUtil {
                 mockResponse =sendPut(mockMvc,uriWithParam,requestJsons[0]);
             }
         }
-        int status = mockResponse.getStatus();
+
         String uri = "";
         if (uriWithParam.indexOf(ConstantsForTest.QuestionMark) > 0) {
             uri = uriWithParam.substring(0, uriWithParam.indexOf(ConstantsForTest.QuestionMark));
         } else {
             uri = uriWithParam;
         }
-        if (status != 200) {
-            LOGGER.error(MessageUtil.getFailureString(uri, status));
-            throw new RuntimeException(MessageUtil.getFailureString(uri, status));
+
+        if (null != mockResponse) {
+            int status = mockResponse.getStatus();
+            if (status != 200) {
+                LOGGER.error(MessageUtil.getFailureString(uri, status));
+                throw new RuntimeException(MessageUtil.getFailureString(uri, status));
+            }
         }
         String res = mockResponse.getContentAsString();
         System.out.println(MessageUtil.getSuccessString(uri, res));

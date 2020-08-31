@@ -19,7 +19,7 @@ public class MiscUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(MiscUtils.class);
 
-	private static volatile MiscUtils instance;
+	private static MiscUtils instance;
 
 	public static MiscUtils getInstance() {
 		if (instance == null) {

@@ -36,47 +36,53 @@ public class CldrTimeZoneUtils {
         String regionFormatTypeStandard = (String) select(dates,
                 "timeZoneNames.regionFormat-type-standard");
         String fallbackFormat = (String) select(dates, "timeZoneNames.hourFormat");
-        Iterator<JSONObject> iterator = arry.iterator();
+
         List<CldrMetaZone> metaZones = new ArrayList<>();
-        while (iterator.hasNext()) {
-            JSONObject objZone = iterator.next();
-            String zoneKey = (String) select(objZone, "mapZone._type");
-            String territory = (String) select(objZone, "mapZone._territory");
-            String metazoneKey = (String) select(objZone, "mapZone._other");
-            JSONObject metazoneValue = (JSONObject) select(dates,
-                    "timeZoneNames.metazone." + metazoneKey);
-            String timeZone = findTimeZone(zoneKey, gmtFormat, gmtZeroFormat, hourFormat);
-            String exemplarCity = null;
-            try {
-                exemplarCity = (String) select(dates,
-                        "timeZoneNames.zone." + zoneKey.replace("/", ".") + ".exemplarCity");
+        if (null != arry) {
+            Iterator<JSONObject> iterator = arry.iterator();
+            while (iterator.hasNext()) {
+                JSONObject objZone = iterator.next();
+                String zoneKey = (String) select(objZone, "mapZone._type");
+                String territory = (String) select(objZone, "mapZone._territory");
+                String metazoneKey = (String) select(objZone, "mapZone._other");
+                if (null == zoneKey) {
+                    continue;
+                }
+                JSONObject metazoneValue = (JSONObject) select(dates,
+                        "timeZoneNames.metazone." + metazoneKey);
+                String timeZone = findTimeZone(zoneKey, gmtFormat, gmtZeroFormat, hourFormat);
+                String exemplarCity = null;
+                try {
+                    exemplarCity = (String) select(dates,
+                            "timeZoneNames.zone." + zoneKey.replace("/", ".") + ".exemplarCity");
 
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                exemplarCity = "";
-                e.printStackTrace();
-            }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    exemplarCity = "";
+                    e.printStackTrace();
+                }
 
-            TimeZoneDisplayName name = new TimeZoneDisplayName();
-            if (metazoneValue == null) {
-                String stard = MessageFormat.format(regionFormatTypeStandard, exemplarCity);
-                name.setLongStandard(stard);
-            } else {
-                String longStandard = (String) select(metazoneValue, "long.standard");
-                String longDaylight = (String) select(metazoneValue, "long.daylight");
-                String longGeneric = (String) select(metazoneValue, "long.generic");
-                String shortStandard = (String) select(metazoneValue, "short.standard");
-                String shortDaylight = (String) select(metazoneValue, "short.daylight");
-                String shortGeneric = (String) select(metazoneValue, "short.generic");
-                name.setLongStandard(longStandard);
-                name.setLongDaylight(longDaylight);
-                name.setLongGeneric(longGeneric);
-                name.setShortStandard(shortStandard);
-                name.setShortDaylight(shortDaylight);
-                name.setShortGeneric(shortGeneric);
+                TimeZoneDisplayName name = new TimeZoneDisplayName();
+                if (metazoneValue == null) {
+                    String stard = MessageFormat.format(regionFormatTypeStandard, exemplarCity);
+                    name.setLongStandard(stard);
+                } else {
+                    String longStandard = (String) select(metazoneValue, "long.standard");
+                    String longDaylight = (String) select(metazoneValue, "long.daylight");
+                    String longGeneric = (String) select(metazoneValue, "long.generic");
+                    String shortStandard = (String) select(metazoneValue, "short.standard");
+                    String shortDaylight = (String) select(metazoneValue, "short.daylight");
+                    String shortGeneric = (String) select(metazoneValue, "short.generic");
+                    name.setLongStandard(longStandard);
+                    name.setLongDaylight(longDaylight);
+                    name.setLongGeneric(longGeneric);
+                    name.setShortStandard(shortStandard);
+                    name.setShortDaylight(shortDaylight);
+                    name.setShortGeneric(shortGeneric);
+                }
+                metaZones.add(new CldrMetaZone(zoneKey, exemplarCity, metazoneKey, timeZone, name,
+                        territory));
             }
-            metaZones.add(new CldrMetaZone(zoneKey, exemplarCity, metazoneKey, timeZone, name,
-                    territory));
         }
 
         TimeZoneName zone = new TimeZoneName(language, gmtZeroFormat, gmtFormat, hourFormat,
@@ -108,7 +114,7 @@ public class CldrTimeZoneUtils {
             return MessageFormat.format(gmtFormat, outputFormat.format(date));
 
         } else if (offset < 0) {
-            Date date = new Date(0 - offset);
+            Date date = new Date(0L - offset);
             SimpleDateFormat outputFormat = new SimpleDateFormat(hourFormat.split(";")[1].trim());
             outputFormat.setTimeZone(TimeZone.getTimeZone(gmtZeroFormat));
             return MessageFormat.format(gmtFormat, outputFormat.format(date));

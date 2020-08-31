@@ -258,13 +258,6 @@ public class ProductService implements IProductService {
 		ComponentMessagesDTO result = null;
 		try {
 			result = this.getLinkedTranslation(paramComponentMessagesDTO);
-		} catch (DataException e1) {
-			logger.error(e1.getMessage(), e1);
-		} catch (ParseException e2) {
-			logger.error(e2.getMessage(), e2);
-		}
-
-		if (result != null) {
 			Object messageObj = result.getMessages();
 			if (!StringUtils.isEmpty(messageObj)) {
 				Map<String, Object> messages = (Map<String, Object>) messageObj;
@@ -275,13 +268,14 @@ public class ProductService implements IProductService {
 					messages.put(entry.getKey(), entry.getValue());
 				}
 				componentMessagesDTO.setMessages(messages);
-				return componentMessagesDTO;
-			} else {
-				return componentMessagesDTO;
 			}
-		} else {
-			return componentMessagesDTO;
+		} catch (DataException e1) {
+			logger.error(e1.getMessage(), e1);
+		} catch (ParseException e2) {
+			logger.error(e2.getMessage(), e2);
 		}
+
+		return componentMessagesDTO;
 	}
 
 	/**

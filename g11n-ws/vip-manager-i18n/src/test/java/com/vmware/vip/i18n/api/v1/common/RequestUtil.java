@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import javax.annotation.CheckForNull;
 import javax.servlet.http.Cookie;
 
 import org.slf4j.Logger;
@@ -67,16 +68,20 @@ public class RequestUtil {
                 mockResponse =sendPut(mockMvc,uriWithParam,requestJsons[0]);
             }
         }
-        int status = mockResponse.getStatus();
+
         String uri = "";
         if (uriWithParam.indexOf(ConstantsForTest.QuestionMark) > 0) {
             uri = uriWithParam.substring(0, uriWithParam.indexOf(ConstantsForTest.QuestionMark));
         } else {
             uri = uriWithParam;
         }
-        if (status != 200) {
-            LOGGER.error(MessageUtil.getFailureString(uri, status));
-            throw new RuntimeException(MessageUtil.getFailureString(uri, status));
+
+        if (null != mockResponse) {
+            int status = mockResponse.getStatus();
+            if (status != 200) {
+                LOGGER.error(MessageUtil.getFailureString(uri, status));
+                throw new RuntimeException(MessageUtil.getFailureString(uri, status));
+            }
         }
         String res = mockResponse.getContentAsString();
         System.out.println(MessageUtil.getSuccessString(uri, res));
@@ -102,7 +107,8 @@ public class RequestUtil {
         }
         return mockResponse;
     }
-    
+
+    @CheckForNull
     public static MockHttpServletResponse sendGet(MockMvc mockMvc,HttpHeaders httpHeaders,Cookie cookies,MockHttpSession session,String uriWithParam){
         MockHttpServletResponse mockResponse = null;
         try {
