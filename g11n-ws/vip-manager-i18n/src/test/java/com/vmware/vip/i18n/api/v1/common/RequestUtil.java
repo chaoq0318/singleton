@@ -82,11 +82,16 @@ public class RequestUtil {
                 LOGGER.error(MessageUtil.getFailureString(uri, status));
                 throw new RuntimeException(MessageUtil.getFailureString(uri, status));
             }
+
+            String res = mockResponse.getContentAsString();
+            System.out.println(MessageUtil.getSuccessString(uri, res));
+            LOGGER.info(MessageUtil.getSuccessString(uri, res));
+            return res;
         }
-        String res = mockResponse.getContentAsString();
-        System.out.println(MessageUtil.getSuccessString(uri, res));
-        LOGGER.info(MessageUtil.getSuccessString(uri, res));
-        return res;
+
+        LOGGER.error("No response was obtained");
+        return null;
+
     }
 
     public static MockHttpServletResponse sendPost(MockMvc mockMvc,String uriWithParam,String requestJson){

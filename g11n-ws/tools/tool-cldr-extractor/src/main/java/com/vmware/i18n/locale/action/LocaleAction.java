@@ -18,13 +18,9 @@ public class LocaleAction {
 		service = new LocaleServiceImpl();
 	}
 
-	public static LocaleAction getInstance() {
+	public static synchronized LocaleAction getInstance() {
 		if (null == instance) {
-			synchronized (PatternAction.class) {
-				if (null == instance) {
-					instance = new LocaleAction();
-				}
-			}
+			instance = new LocaleAction();
 		}
 		return instance;
 	}
