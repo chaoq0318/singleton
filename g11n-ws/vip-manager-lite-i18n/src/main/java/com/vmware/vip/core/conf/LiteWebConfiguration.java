@@ -8,16 +8,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.connector.Connector;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.descriptor.web.SecurityCollection;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
@@ -32,7 +26,7 @@ import org.springframework.web.util.UrlPathHelper;
 import com.vmware.vip.api.rest.API;
 import com.vmware.vip.api.rest.APIV1;
 import com.vmware.vip.api.rest.APIV2;
-import com.vmware.vip.core.Interceptor.APICacheControlInterceptor;
+import com.vmware.vip.core.Interceptor.LiteAPICacheControlInterceptor;
 import com.vmware.vip.core.Interceptor.LiteAPICrossDomainInterceptor;
 
 /**
@@ -142,7 +136,7 @@ public class LiteWebConfiguration implements WebMvcConfigurer {
 		
 		//cacheControl
 		if (StringUtils.isNotEmpty(this.cacheControlValue)) {
-		    registry.addInterceptor(new APICacheControlInterceptor(this.cacheControlValue)).addPathPatterns(API.I18N_API_ROOT + APIV2.V + "/**");
+		    registry.addInterceptor(new LiteAPICacheControlInterceptor(this.cacheControlValue)).addPathPatterns(API.I18N_API_ROOT + APIV2.V + "/**");
 		}
 	}
 
