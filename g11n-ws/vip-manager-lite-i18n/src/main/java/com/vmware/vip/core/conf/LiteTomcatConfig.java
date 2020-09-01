@@ -18,12 +18,12 @@ import com.vmware.vip.common.constants.ConstantsTomcat;
  *
  */
 @Configuration
-public class TomcatConfig {
+public class LiteTomcatConfig {
 
 	@Bean
-	public ServletWebServerFactory servletContainer(ServerProperties serverProperties) {
+	public ServletWebServerFactory servletContainer(LiteServerProperties serverProperties) {
 		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-		tomcat.addConnectorCustomizers(new VIPTomcatConnectionCustomizer(serverProperties));
+		tomcat.addConnectorCustomizers(new VIPLiteTomcatConnectionCustomizer(serverProperties));
 		if (serverProperties.getServerScheme().equalsIgnoreCase(ConstantsTomcat.HTTP_HTTPS) ||
 				serverProperties.getServerScheme().equalsIgnoreCase(ConstantsTomcat.HTTPS_HTTP)) {
 			tomcat.addAdditionalTomcatConnectors(initiateHttpsConnector(serverProperties));
@@ -34,21 +34,21 @@ public class TomcatConfig {
 	/**
 	 * create the https additional connection for tomcat
 	 */
-	private Connector initiateHttpsConnector(ServerProperties serverProperties) {
+	private Connector initiateHttpsConnector(LiteServerProperties liteServerProperties) {
 		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
 		connector.setScheme(ConstantsTomcat.HTTPS);
-		connector.setPort(serverProperties.getServerPort());
+		connector.setPort(liteServerProperties.getServerPort());
 		connector.setSecure(true);
 		Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
 		protocol.setSSLEnabled(true);
-		protocol.setKeystoreFile(serverProperties.getHttpsKeyStore());
-		protocol.setKeystorePass(serverProperties.getHttpsKeyStorePassword());
-		protocol.setKeystoreType(serverProperties.getHttpsKeyStoreType());
-		protocol.setKeyPass(serverProperties.getHttpsKeyPassword());
-		protocol.setKeyAlias(serverProperties.getHttpsKeyAlias());
-		protocol.setMaxHttpHeaderSize(serverProperties.getMaxHttpHeaderSize());
+		protocol.setKeystoreFile(liteServerProperties.getHttpsKeyStore());
+		protocol.setKeystorePass(liteServerProperties.getHttpsKeyStorePassword());
+		protocol.setKeystoreType(liteServerProperties.getHttpsKeyStoreType());
+		protocol.setKeyPass(liteServerProperties.getHttpsKeyPassword());
+		protocol.setKeyAlias(liteServerProperties.getHttpsKeyAlias());
+		protocol.setMaxHttpHeaderSize(liteServerProperties.getMaxHttpHeaderSize());
 		connector.setRedirectPort(ConstantsTomcat.REDIRECT_PORT);
-		connector.setAllowTrace(serverProperties.isAllowTrace());
+		connector.setAllowTrace(liteServerProperties.isAllowTrace());
 		return connector;
 	}
 

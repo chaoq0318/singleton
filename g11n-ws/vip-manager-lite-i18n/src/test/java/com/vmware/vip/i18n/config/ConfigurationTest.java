@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.vmware.vip.LiteBootApplication;
-import com.vmware.vip.core.conf.ServerProperties;
+import com.vmware.vip.core.conf.LiteServerProperties;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = LiteBootApplication.class)
@@ -24,7 +24,7 @@ public class ConfigurationTest {
 	
 	@Test
 	public void testServerProperites() {
-	    ServerProperties sp = webApplicationContext.getBean(ServerProperties.class);
+	    LiteServerProperties sp = webApplicationContext.getBean(LiteServerProperties.class);
 	    sp.getServerPort();
 	    sp.getServerScheme();
 	    sp.getHttpPort();
@@ -37,7 +37,7 @@ public class ConfigurationTest {
 	
 	@Test
     public void testServerProperites1() {
-        ServerProperties sp = new ServerProperties();
+        LiteServerProperties sp = new LiteServerProperties();
         sp.setServerPort(300);
         sp.setServerScheme("testScheme");
         sp.setHttpPort(123);
