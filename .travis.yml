@@ -22,9 +22,6 @@ jobs:
     - stage: code scan
 #       jdk: openjdk11
       script:
-        - |
-            java \
-            -version
 #         - java -version
         - git clone --branch=devops https://github.com/vmware/singleton.git devops
         - SONARSCANNER='sonar-scanner-cli-4.4.0.2170-linux'
@@ -39,13 +36,13 @@ jobs:
         - cd $TRAVIS_BUILD_DIR/g11n-ws && ./gradlew test jacocoTestReport --info
         - java -version
         
-#         - cd $TRAVIS_BUILD_DIR && ls -la
-#         - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
-#         - sudo chmod +x install-jdk.sh
-#         - export JAVA_HOME=$HOME/openjdk11
-#         - export PATH="$JAVA_HOME/bin:$PATH"
-#         - $TRAVIS_BUILD_DIR/install-jdk.sh --target "/home/travis/openjdk11" --workspace "/home/travis/.cache/install-jdk" --feature "11" --license "GPL" --cacerts
-#         - java -version
+        - cd $TRAVIS_BUILD_DIR && ls -la
+        - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+        - sudo chmod +x install-jdk.sh
+        - export JAVA_HOME=$HOME/openjdk11
+        - export PATH="$JAVA_HOME/bin:$PATH"
+        - $TRAVIS_BUILD_DIR/install-jdk.sh --target "/home/travis/openjdk11" --workspace "/home/travis/.cache/install-jdk" --feature "11" --license "GPL" --cacerts
+        - java -version
         
         - |
             cd $TRAVIS_BUILD_DIR/g11n-ws && $TRAVIS_BUILD_DIR/$SONARSCANNERINNER/bin/sonar-scanner \
@@ -59,7 +56,6 @@ jobs:
             -Dsonar.branch.name=master \
             -Dsonar.organization=$SONAR_ORG \
             -Dsonar.exclusions=tools/tool-cldr-extractor/**,**/*.py,**/*.xml,**/*.css,**/*.js,**/*.html \
-            -Dsonar.java.source=1.8 \
             -Dsonar.java.binaries=vip-manager-i18n/build/classes/java,vip-manager-l10n/build/classes/java,vip-manager-lite-i18n/build/classes/java \
             -Dsonar.java.test.binaries=vip-manager-i18n/build/classes/test,vip-manager-l10n/build/classes/test,vip-manager-lite-i18n/build/classes/test \
             -Dsonar.coverage.jacoco.xmlReportPaths=vip-manager-i18n/build/reports/jacoco.xml,vip-manager-l10n/build/reports/jacoco.xml,vip-manager-lite-i18n/build/reports/jacoco.xml \
