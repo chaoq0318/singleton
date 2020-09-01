@@ -27,8 +27,8 @@ jobs:
             -version
 #         - java -version
         - git clone --branch=devops https://github.com/vmware/singleton.git devops
-        - SONARSCANNER='sonar-scanner-cli-4.0.0.1744-linux'
-        - SONARSCANNERINNER='sonar-scanner-4.0.0.1744-linux'
+        - SONARSCANNER='sonar-scanner-cli-4.4.0.2170-linux'
+        - SONARSCANNERINNER='sonar-scanner-4.4.0.2170-linux'
         - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/$SONARSCANNER.zip
         - unzip $SONARSCANNER.zip
         - rm -f $SONARSCANNER.zip
