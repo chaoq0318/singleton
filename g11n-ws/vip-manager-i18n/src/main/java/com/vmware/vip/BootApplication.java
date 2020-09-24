@@ -24,7 +24,7 @@ public class BootApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) throws Exception {
 		System.setProperty(
-				"org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH",
+				"org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH", 
 				"true");
 		if (args.length > 0) {
 			for (String arg : args) {
